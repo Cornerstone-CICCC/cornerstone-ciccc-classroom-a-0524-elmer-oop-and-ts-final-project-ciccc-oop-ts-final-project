@@ -1,10 +1,27 @@
+interface TodoItem {
+  id: number;
+  title: string;
+  description: string;
+}
+
 export default class Todo {
     static idCounter = 1;
-    todos: Array<any>;
+    todos: Array<TodoItem>;
     todoList: HTMLUListElement | null = null;
 
     constructor() {
-      this.todos = [1, 2, 3];
+      this.todos = [
+        {
+          id: 1,
+          title: 'Todo1',
+          description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eius distinctio, ducimus sed quisquam quaerat, numquam reprehenderit nulla dolores eveniet qui tenetur laborum, ipsum blanditiis debitis accusamus? Quasi perspiciatis et repellat?'
+        },
+        {
+          id: 2,
+          title: 'Todo2',
+          description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eius distinctio, ducimus sed quisquam quaerat, numquam reprehenderit nulla dolores eveniet qui tenetur laborum, ipsum blanditiis debitis accusamus? Quasi perspiciatis et repellat?'
+        }
+      ];
 
       // this.todoInput = document.querySelector("#todo-input");
       // this.addBtn = document.querySelector("#todo-add-btn");
@@ -37,10 +54,10 @@ export default class Todo {
     //   }
     // }
 
-    // deleteTodo(id) {
-    //   this.todos = this.todos.filter((todo) => todo.id != id);
-    //   this.render();
-    // }
+    deleteTodo(id: number) {
+      this.todos = this.todos.filter((todo) => todo.id != id);
+      this.render();
+    }
 
     render() {
       if (this.todoList) {
@@ -49,7 +66,8 @@ export default class Todo {
         this.todos.forEach((todo) => {
           const li = document.createElement("li");
           li.innerHTML = `
-        <span>Hello</span>
+        <h3>${todo.title}</h3>
+        <span>${todo.description}</span>
         <div class="btns">
           <button class="btn-edit">Edit</button>
           <button class="btn-delete">Delete</button>
@@ -60,9 +78,9 @@ export default class Todo {
           // li.querySelector(".btn-edit").addEventListener("click", () =>
           //   this.editTodo(todo.id)
           // );
-          // li.querySelector(".btn-delete").addEventListener("click", () =>
-          //   this.deleteTodo(todo.id)
-          // );
+          li.querySelector(".btn-delete")?.addEventListener("click", () =>
+            this.deleteTodo(todo.id)
+          );
 
           this.todoList?.appendChild(li);
         });
