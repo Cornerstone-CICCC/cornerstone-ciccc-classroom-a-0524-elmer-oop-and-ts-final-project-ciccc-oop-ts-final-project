@@ -44,15 +44,17 @@ export default class Todo {
     //   }
     // }
 
-    // editTodo(id) {
-    //   // Fetch one object where todo id = id
-    //   const todoToEdit = this.todos.find((todo) => todo.id === id);
-    //   const newDescription = prompt("Edit To-Do: ", todoToEdit.description);
-    //   if (newDescription) {
-    //     todoToEdit.description = newDescription;
-    //     this.render();
-    //   }
-    // }
+    editTodo(id: number) {
+      // Fetch one object where todo id = id
+      const todoToEdit = this.todos.find((todo) => todo.id === id);
+      if (todoToEdit) {
+        const newDescription = prompt("Edit To-Do: ", todoToEdit.description);
+        if (newDescription) {
+          todoToEdit.description = newDescription;
+          this.render();
+        }
+      }
+    }
 
     deleteTodo(id: number) {
       this.todos = this.todos.filter((todo) => todo.id != id);
@@ -75,9 +77,9 @@ export default class Todo {
       `;
 
           // Add event listeners to btns
-          // li.querySelector(".btn-edit").addEventListener("click", () =>
-          //   this.editTodo(todo.id)
-          // );
+          li.querySelector(".btn-edit")?.addEventListener("click", () =>
+            this.editTodo(todo.id)
+          );
           li.querySelector(".btn-delete")?.addEventListener("click", () =>
             this.deleteTodo(todo.id)
           );
