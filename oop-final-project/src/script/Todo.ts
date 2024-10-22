@@ -1,4 +1,4 @@
-interface TodoItem {
+export interface ITodoItem {
   id: number;
   title: string;
   description: string;
@@ -7,7 +7,7 @@ interface TodoItem {
 
 export default class Todo {
     static idCounter = 1;
-    todos: Array<TodoItem>;
+    todos: Array<ITodoItem>;
     addBtn: HTMLButtonElement | null = null;
     todoList: HTMLUListElement | null = null;
     titleInput: HTMLInputElement | null = null;
@@ -102,7 +102,7 @@ export default class Todo {
       }
     }
 
-    renderStatusSection(container: HTMLElement, items: Array<TodoItem>, title: string) {
+    renderStatusSection(container: HTMLElement, items: Array<ITodoItem>, title: string) {
       const sectionTitle = document.createElement("h3");
       sectionTitle.textContent = title;
       container.appendChild(sectionTitle);
