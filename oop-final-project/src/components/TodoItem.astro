@@ -1,16 +1,18 @@
 ---
+import type { ITodoItem } from "../script/Todo";
+
 interface Props {
-  title: string;
-  body: string;
+  key: number;
+  todo: ITodoItem;
   // 	href: string;
 }
 
-const { title, body } = Astro.props;
+const { key, todo } = Astro.props;
 ---
 
 <div class="card">
-  <h3>{title}</h3>
-  <p>{body}</p>
+  <h3>{todo.title}</h3>
+  <p>{todo.description}</p>
 </div>
 
 <script src="../todoitem.js"></script>
