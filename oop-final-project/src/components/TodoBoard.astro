@@ -1,6 +1,25 @@
-<input type="text" name="title" id="title-input" />
+---
+import TodoStatus from "../components/Todostatus.astro";
+import TodoItem from "./TodoItem.astro";
+
+const TODOSTATUS = ["ToDo", "InProgress", "Done"];
+---
+
+<!-- <input type="text" name="title" id="title-input" />
 <input type="text" name="description" id="description-input" />
 <button id="todo-add-btn">Add To Do</button>
 <ul id="todo-list"></ul>
 
-<script src="../script/Todo.ts"></script>
+<script src="../script/Todo.ts"></script> -->
+<h1>Task List</h1>
+<!-- {
+  TODOSTATUS.map((status) => {
+    <TodoStatus title={status} />;
+  })
+} -->
+<TodoStatus title="To Do">
+  <TodoItem title="Reading" body="Today's goal is reading 100 pages" />
+</TodoStatus>
+<TodoStatus title="In Progress">
+  <TodoItem title="Cooking" body="I gonna cook curry" />
+</TodoStatus>
