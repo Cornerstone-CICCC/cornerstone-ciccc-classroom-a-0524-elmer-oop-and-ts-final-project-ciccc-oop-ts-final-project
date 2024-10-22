@@ -1,33 +1,23 @@
 ---
-import TodoStatus from "../components/Todostatus.astro";
-import TodoItem from "./TodoItem.astro";
-import type { ITodoItem } from "../script/Todo";
 
-const TODOSTATUS = ["ToDo", "InProgress", "Done"];
-const todoList: ITodoItem[] = [
-  { id: 1, title: "Test1", description: "todo description1", status: "todo" },
-  { id: 2, title: "Test2", description: "todo description2", status: "todo" },
-];
 ---
 
-<!-- <input type="text" name="title" id="title-input" />
-<input type="text" name="description" id="description-input" />
-<button id="todo-add-btn">Add To Do</button>
+<!--
 <ul id="todo-list"></ul>
 
-<script src="../script/Todo.ts"></script> -->
-<h1>Task List</h1>
-<!-- {
+ {
   TODOSTATUS.map((status) => {
     <TodoStatus title={status} />;
   })
-} -->
-<TodoStatus title="Todo" todos={todoList} />
-<!-- <TodoItem title="Reading" body="Today's goal is reading 100 pages" />
-</TodoStatus> -->
-<!-- <TodoStatus title="In Progress">
+} --><!-- <TodoStatus title="Todo" todos={todoList} /> --><!-- <TodoItem title="Reading" body="Today's goal is reading 100 pages" />
+</TodoStatus> --><!-- <TodoStatus title="In Progress">
   <TodoItem title="Cooking" body="I gonna cook curry" />
 </TodoStatus> -->
+<h1>Task List</h1>
+
+<input type="text" name="title" id="title-input" />
+<input type="text" name="description" id="description-input" />
+<button id="todo-add-btn">Add To Do</button>
 
 <div id="todo-container"></div>
 <div id="in-progress-container"></div>
