@@ -1,0 +1,13 @@
+---
+import TodoItem from "../components/TodoItem.astro";
+interface Props {
+  title: string;
+}
+
+const { title } = Astro.props;
+---
+
+<section>
+  <h2>{title}</h2>
+  <TodoItem title="Gym" body="Today is chest day" />
+</section>
