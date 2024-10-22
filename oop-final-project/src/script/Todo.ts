@@ -7,7 +7,10 @@ interface TodoItem {
 export default class Todo {
     static idCounter = 1;
     todos: Array<TodoItem>;
+    addBtn: HTMLButtonElement | null = null;
     todoList: HTMLUListElement | null = null;
+    titleInput: HTMLInputElement | null = null;
+    descriptionInput: HTMLInputElement | null = null;
 
     constructor() {
       this.todos = [
@@ -23,26 +26,30 @@ export default class Todo {
         }
       ];
 
-      // this.todoInput = document.querySelector("#todo-input");
-      // this.addBtn = document.querySelector("#todo-add-btn");
+      this.titleInput = document.querySelector("#title-input");
+      this.descriptionInput = document.querySelector("#description-input");
+      this.addBtn = document.querySelector("#todo-add-btn");
       this.todoList = document.querySelector("#todo-list");
 
-      // this.addBtn.addEventListener("click", () => this.addTodo());
+      this.addBtn?.addEventListener("click", () => this.addTodo());
       this.render();
     }
 
-    // addTodo() {
-    //   const description = this.todoInput.value;
-    //   if (description) {
-    //     this.todos.push({
-    //       id: Todo.idCounter++,
-    //       description,
-    //     });
+    addTodo() {
+      const title = this.titleInput?.value;
+      const description = this.descriptionInput?.value;
+      if (title && description) {
+        this.todos.push({
+          id: Todo.idCounter++,
+          title,
+          description,
+        });
 
-    //     this.todoInput.value = "";
-    //     this.render();
-    //   }
-    // }
+        if (this.titleInput) this.titleInput.value = "";
+        if (this.descriptionInput) this.descriptionInput.value = "";
+        this.render();
+      }
+    }
 
     editTodo(id: number) {
       // Fetch one object where todo id = id
