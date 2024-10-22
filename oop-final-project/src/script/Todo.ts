@@ -2,6 +2,7 @@ interface TodoItem {
   id: number;
   title: string;
   description: string;
+  status: string; // "todo", "inProgress", "done"
 }
 
 export default class Todo {
@@ -17,19 +18,28 @@ export default class Todo {
         {
           id: 1,
           title: 'Todo1',
-          description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eius distinctio, ducimus sed quisquam quaerat, numquam reprehenderit nulla dolores eveniet qui tenetur laborum, ipsum blanditiis debitis accusamus? Quasi perspiciatis et repellat?'
+          description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eius distinctio, ducimus sed quisquam quaerat, numquam reprehenderit nulla dolores eveniet qui tenetur laborum, ipsum blanditiis debitis accusamus? Quasi perspiciatis et repellat?',
+          status: 'todo'
         },
         {
           id: 2,
           title: 'Todo2',
-          description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eius distinctio, ducimus sed quisquam quaerat, numquam reprehenderit nulla dolores eveniet qui tenetur laborum, ipsum blanditiis debitis accusamus? Quasi perspiciatis et repellat?'
+          description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eius distinctio, ducimus sed quisquam quaerat, numquam reprehenderit nulla dolores eveniet qui tenetur laborum, ipsum blanditiis debitis accusamus? Quasi perspiciatis et repellat?',
+          status: 'inProgress'
+        },
+        {
+          id: 3,
+          title: 'Todo3',
+          description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eius distinctio, ducimus sed quisquam quaerat, numquam reprehenderit nulla dolores eveniet qui tenetur laborum, ipsum blanditiis debitis accusamus? Quasi perspiciatis et repellat?',
+          status: 'done'
         }
       ];
 
       this.titleInput = document.querySelector("#title-input");
       this.descriptionInput = document.querySelector("#description-input");
       this.addBtn = document.querySelector("#todo-add-btn");
-      this.todoList = document.querySelector("#todo-list");
+
+      // this.todoList = document.querySelector("#todo-list");
 
       this.addBtn?.addEventListener("click", () => this.addTodo());
       this.render();
@@ -43,6 +53,7 @@ export default class Todo {
           id: Todo.idCounter++,
           title,
           description,
+          status: 'todo'
         });
 
         if (this.titleInput) this.titleInput.value = "";
@@ -68,32 +79,55 @@ export default class Todo {
       this.render();
     }
 
-    render() {
-      if (this.todoList) {
-        this.todoList.innerHTML = ""; // Clear the ul
+  render() {
+      const todos = this.todos.filter((todo) => todo.status === 'todo');
+      const inProgress = this.todos.filter((todo) => todo.status === 'inProgress');
+      const done = this.todos.filter((todo) => todo.status === 'done');
 
-        this.todos.forEach((todo) => {
-          const li = document.createElement("li");
-          li.innerHTML = `
-        <h3>${todo.title}</h3>
-        <span>${todo.description}</span>
-        <div class="btns">
-          <button class="btn-edit">Edit</button>
-          <button class="btn-delete">Delete</button>
-        </div>
-      `;
+      const todoContainer: HTMLElement | null = document.querySelector("#todo-container");
+      const inProgressContainer: HTMLElement | null = document.querySelector("#in-progress-container");
+      const doneContainer: HTMLElement | null = document.querySelector("#done-container");
 
-          // Add event listeners to btns
-          li.querySelector(".btn-edit")?.addEventListener("click", () =>
-            this.editTodo(todo.id)
-          );
-          li.querySelector(".btn-delete")?.addEventListener("click", () =>
-            this.deleteTodo(todo.id)
-          );
-
-          this.todoList?.appendChild(li);
-        });
+      if (todoContainer) {
+        todoContainer.innerHTML = ""; // Clear the container
+        this.renderStatusSection(todoContainer, todos, "To-Do");
       }
+      if (inProgressContainer) {
+        inProgressContainer.innerHTML = ""; // Clear the container
+        this.renderStatusSection(inProgressContainer, inProgress, "In Progress");
+      }
+      if (doneContainer) {
+        doneContainer.innerHTML = ""; // Clear the container
+        this.renderStatusSection(doneContainer, done, "Done");
+      }
+    }
+
+    renderStatusSection(container: HTMLElement, items: Array<TodoItem>, title: string) {
+      const sectionTitle = document.createElement("h3");
+      sectionTitle.textContent = title;
+      container.appendChild(sectionTitle);
+
+      items.forEach((todo) => {
+        const li = document.createElement("li");
+        li.innerHTML = `
+          <h3>${todo.title}</h3>
+          <span>${todo.description}</span>
+          <div class="btns">
+            <button class="btn-edit">Edit</button>
+            <button class="btn-delete">Delete</button>
+          </div>
+        `;
+
+        // Add event listeners for edit and delete buttons
+        li.querySelector(".btn-edit")?.addEventListener("click", () =>
+          this.editTodo(todo.id)
+        );
+        li.querySelector(".btn-delete")?.addEventListener("click", () =>
+          this.deleteTodo(todo.id)
+        );
+
+        container.appendChild(li);
+      });
     }
   }
 
