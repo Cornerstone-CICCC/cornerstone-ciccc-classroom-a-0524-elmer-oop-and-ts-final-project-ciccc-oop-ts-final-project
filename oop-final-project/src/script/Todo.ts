@@ -6,12 +6,14 @@ export interface ITodoItem {
 }
 
 export default class Todo {
-    static idCounter = 1;
+  static idCounter = 1;
+  static filterLetter = "";
     todos: Array<ITodoItem>;
     addBtn: HTMLButtonElement | null = null;
     todoList: HTMLUListElement | null = null;
     titleInput: HTMLInputElement | null = null;
     descriptionInput: HTMLInputElement | null = null;
+    searchbar: HTMLInputElement | null = null;
 
     constructor() {
       this.todos = [
@@ -38,10 +40,12 @@ export default class Todo {
       this.titleInput = document.querySelector("#title-input");
       this.descriptionInput = document.querySelector("#description-input");
       this.addBtn = document.querySelector("#todo-add-btn");
+      this.searchbar = document.querySelector("#search-input");
 
       // this.todoList = document.querySelector("#todo-list");
 
       this.addBtn?.addEventListener("click", () => this.addTodo());
+      this.searchbar?.addEventListener("keyup", () => this.updateFilterLetter());
       this.render();
     }
 
@@ -79,58 +83,71 @@ export default class Todo {
       this.render();
     }
 
-  render() {
-      const todos = this.todos.filter((todo) => todo.status === 'todo');
-      const inProgress = this.todos.filter((todo) => todo.status === 'inProgress');
-      const done = this.todos.filter((todo) => todo.status === 'done');
-
-      const todoContainer: HTMLElement | null = document.querySelector("#todo-container");
-      const inProgressContainer: HTMLElement | null = document.querySelector("#in-progress-container");
-      const doneContainer: HTMLElement | null = document.querySelector("#done-container");
-
-      if (todoContainer) {
-        todoContainer.innerHTML = ""; // Clear the container
-        this.renderStatusSection(todoContainer, todos, "To-Do");
-      }
-      if (inProgressContainer) {
-        inProgressContainer.innerHTML = ""; // Clear the container
-        this.renderStatusSection(inProgressContainer, inProgress, "In Progress");
-      }
-      if (doneContainer) {
-        doneContainer.innerHTML = ""; // Clear the container
-        this.renderStatusSection(doneContainer, done, "Done");
-      }
-    }
-
-    renderStatusSection(container: HTMLElement, items: Array<ITodoItem>, title: string) {
-      const sectionTitle = document.createElement("h3");
-      sectionTitle.textContent = title;
-      container.appendChild(sectionTitle);
-
-      items.forEach((todo) => {
-        const li = document.createElement("li");
-        li.innerHTML = `
-          <h3>${todo.title}</h3>
-          <span>${todo.description}</span>
-          <div class="btns">
-            <button class="btn-edit">Edit</button>
-            <button class="btn-delete">Delete</button>
-          </div>
-        `;
-
-        // Add event listeners for edit and delete buttons
-        li.querySelector(".btn-edit")?.addEventListener("click", () =>
-          this.editTodo(todo.id)
-        );
-        li.querySelector(".btn-delete")?.addEventListener("click", () =>
-          this.deleteTodo(todo.id)
-        );
-
-        container.appendChild(li);
-      });
+  updateFilterLetter() {
+    if (this.searchbar) {
+      Todo.filterLetter = this.searchbar.value.toLowerCase();
+      this.render();
     }
   }
 
-  document.addEventListener("DOMContentLoaded", () => {
-    const app = new Todo();
-  });
+  render() {
+    const filteredTodos = this.todos.filter(todo =>
+      Todo.filterLetter
+        ? todo.title.toLowerCase().includes(Todo.filterLetter)
+        : true
+    );
+
+    const todos = filteredTodos.filter((todo) => todo.status === 'todo');
+    const inProgress = filteredTodos.filter((todo) => todo.status === 'inProgress');
+    const done = filteredTodos.filter((todo) => todo.status === 'done');
+
+    const todoContainer: HTMLElement | null = document.querySelector("#todo-container");
+    const inProgressContainer: HTMLElement | null = document.querySelector("#in-progress-container");
+    const doneContainer: HTMLElement | null = document.querySelector("#done-container");
+
+    if (todoContainer) {
+      todoContainer.innerHTML = ""; // Clear the container
+      this.renderStatusSection(todoContainer, todos, "To-Do");
+    }
+    if (inProgressContainer) {
+      inProgressContainer.innerHTML = ""; // Clear the container
+      this.renderStatusSection(inProgressContainer, inProgress, "In Progress");
+    }
+    if (doneContainer) {
+      doneContainer.innerHTML = ""; // Clear the container
+      this.renderStatusSection(doneContainer, done, "Done");
+    }
+  }
+
+  renderStatusSection(container: HTMLElement, items: Array<ITodoItem>, title: string) {
+    const sectionTitle = document.createElement("h3");
+    sectionTitle.textContent = title;
+    container.appendChild(sectionTitle);
+
+    items.forEach((todo) => {
+      const li = document.createElement("li");
+      li.innerHTML = `
+        <h3>${todo.title}</h3>
+        <span>${todo.description}</span>
+        <div class="btns">
+          <button class="btn-edit">Edit</button>
+          <button class="btn-delete">Delete</button>
+        </div>
+      `;
+
+      // Add event listeners for edit and delete buttons
+      li.querySelector(".btn-edit")?.addEventListener("click", () =>
+        this.editTodo(todo.id)
+      );
+      li.querySelector(".btn-delete")?.addEventListener("click", () =>
+        this.deleteTodo(todo.id)
+      );
+
+      container.appendChild(li);
+    });
+  }
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  const app = new Todo();
+});
