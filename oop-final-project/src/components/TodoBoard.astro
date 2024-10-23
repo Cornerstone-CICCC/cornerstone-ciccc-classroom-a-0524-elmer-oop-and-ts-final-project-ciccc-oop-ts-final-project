@@ -15,12 +15,24 @@
 </TodoStatus> -->
 <h1>Task List</h1>
 
-<input type="text" name="title" id="title-input" />
-<input type="text" name="description" id="description-input" />
-<button id="todo-add-btn">Add To Do</button>
+<div id="createModal_container">
+    <div class="modal_background">
+        <div class="create_modal">
+            <input type="text" name="title" id="title-input" />
+            <input type="text" name="description" id="description-input" />
+            <button id="todo-add-btn">Add To Do</button>
+        </div>
+    </div>
+</div>
 
 <div id="todo-container"></div>
 <div id="in-progress-container"></div>
 <div id="done-container"></div>
 
 <script src="../script/Todo.ts"></script>
+
+<style>
+    #createModal_container {
+        display: none;
+    }
+</style>
