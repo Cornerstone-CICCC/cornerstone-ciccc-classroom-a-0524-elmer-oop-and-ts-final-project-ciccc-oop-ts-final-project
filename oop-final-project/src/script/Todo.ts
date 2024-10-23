@@ -7,12 +7,15 @@ export interface ITodoItem {
 
 export default class Todo {
   static idCounter = 1;
+  static filterLetter = "";
   todos: Array<ITodoItem>;
   addBtn: HTMLButtonElement | null = null;
-  displayModal: HTMLButtonElement | null = null;
   todoList: HTMLUListElement | null = null;
   titleInput: HTMLInputElement | null = null;
   descriptionInput: HTMLInputElement | null = null;
+  searchbar: HTMLInputElement | null = null;
+  createModalContainer: HTMLDivElement | null = null;
+  modalBtn: HTMLButtonElement | null = null;
 
   constructor() {
     this.todos = [
@@ -39,19 +42,22 @@ export default class Todo {
       },
     ];
 
-    this.titleInput = document.querySelector("#title-input");
-    this.descriptionInput = document.querySelector("#description-input");
     this.addBtn = document.querySelector("#todo-add-btn");
-    this.displayModal = document.querySelector("#createModal_container");
+    this.searchbar = document.querySelector("#search-input");
+    this.modalBtn = document.querySelector(".modal_btn");
+    this.createModalContainer = document.querySelector(
+      "#createModal-container"
+    );
 
     // this.todoList = document.querySelector("#todo-list");
 
-    this.addBtn?.addEventListener("click", () => this.addTodo());
+    this.searchbar?.addEventListener("keyup", () => this.updateFilterLetter());
     this.render();
-    // this.displayModal?.addEventListener("click", function () {});
   }
 
-  addTodo() {
+  addTodo(status: any) {
+    this.titleInput = document.querySelector("#title-input");
+    this.descriptionInput = document.querySelector("#description-input");
     const title = this.titleInput?.value;
     const description = this.descriptionInput?.value;
     if (title && description) {
@@ -59,7 +65,7 @@ export default class Todo {
         id: Todo.idCounter++,
         title,
         description,
-        status: "todo",
+        status,
       });
 
       if (this.titleInput) this.titleInput.value = "";
@@ -85,12 +91,56 @@ export default class Todo {
     this.render();
   }
 
+  updateFilterLetter() {
+    if (this.searchbar) {
+      Todo.filterLetter = this.searchbar.value.toLowerCase();
+      this.render();
+    }
+  }
+
+  openCreateModal(title: string) {
+    if (this.createModalContainer) {
+      const createModalElement = document.createElement("div");
+      createModalElement.classList.add("modal_background");
+      createModalElement.innerHTML = `
+        <div class="createModal-description">
+            <div class="create_modal">
+                <input type="text" name="title" id="title-input" />
+                <input type="text" name="description" id="description-input" />
+                <button id="todo-add-btn" class="${title}">Add To Do</button>
+            </div>
+        </div>
+      `;
+      const status = createModalElement
+        .querySelector("#todo-add-btn")
+        ?.getAttribute("class");
+      let camelStatus = "";
+      if (status === "To-Do") {
+        camelStatus = "todo";
+      } else if (status === "In Progress") {
+        camelStatus = "inProgress";
+      } else {
+        camelStatus = "done";
+      }
+      createModalElement
+        .querySelector("#todo-add-btn")
+        ?.addEventListener("click", () => this.addTodo(camelStatus));
+      this.createModalContainer.appendChild(createModalElement);
+    }
+  }
+
   render() {
-    const todos = this.todos.filter((todo) => todo.status === "todo");
-    const inProgress = this.todos.filter(
+    const filteredTodos = this.todos.filter((todo) =>
+      Todo.filterLetter
+        ? todo.title.toLowerCase().includes(Todo.filterLetter)
+        : true
+    );
+
+    const todos = filteredTodos.filter((todo) => todo.status === "todo");
+    const inProgress = filteredTodos.filter(
       (todo) => todo.status === "inProgress"
     );
-    const done = this.todos.filter((todo) => todo.status === "done");
+    const done = filteredTodos.filter((todo) => todo.status === "done");
 
     const todoContainer: HTMLElement | null =
       document.querySelector("#todo-container");
@@ -120,25 +170,27 @@ export default class Todo {
     title: string
   ) {
     const sectionTitle = document.createElement("h3");
-    // sectionTitle.textContent = title;
     sectionTitle.innerHTML = `
     <div class="status_header">
       <h3>${title}</h3>
       <button class="modal_btn">+</button>
     </div>
     `;
+    sectionTitle
+      .querySelector(".modal_btn")
+      ?.addEventListener("click", () => this.openCreateModal(title));
     container.appendChild(sectionTitle);
 
     items.forEach((todo) => {
       const li = document.createElement("li");
       li.innerHTML = `
-          <h3>${todo.title}</h3>
-          <span>${todo.description}</span>
-          <div class="btns">
-            <button class="btn-edit">Edit</button>
-            <button class="btn-delete">Delete</button>
-          </div>
-        `;
+        <h3>${todo.title}</h3>
+        <span>${todo.description}</span>
+        <div class="btns">
+          <button class="btn-edit">Edit</button>
+          <button class="btn-delete">Delete</button>
+        </div>
+      `;
 
       // Add event listeners for edit and delete buttons
       li
@@ -149,12 +201,6 @@ export default class Todo {
         ?.addEventListener("click", () => this.deleteTodo(todo.id));
 
       container.appendChild(li);
-    });
-  }
-
-  modalDisplay() {
-    document.addEventListener("click", function (e) {
-      const target = e.target.closest();
     });
   }
 }
