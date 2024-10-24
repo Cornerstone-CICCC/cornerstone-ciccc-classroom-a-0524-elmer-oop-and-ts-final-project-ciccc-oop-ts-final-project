@@ -164,15 +164,6 @@ export default class Todo {
     sectionInner.innerHTML = `
       <div class="section-heading">
         <h3 class="section-title">${title}</h3>
-        <div class="section-icons">
-          <span class="count">3 tasks</span>
-          <img
-            src="https://dummyimage.com/600x400/db1dde/fff"
-            alt="plus-btn"
-            class="plus-btn"
-            width="50px"
-          />
-        </div>
       </div>
       <ul
         class="todo-list todo-list-upcoming"
@@ -270,7 +261,17 @@ export default class Todo {
           >
             <div class="todo-item-heading">
               <h4 class="todo-item-title">${todo.title}</h4>
-              <div class="detail-btn-wrapper">
+              <div class="todo-btn-wrapper">
+                <img
+                  src="/images/edit.svg"
+                  alt="edit button"
+                  class="btn-edit"
+                />
+                <img
+                  src="/images/delete.svg"
+                  alt="delete button"
+                  class="btn-delete"
+                />
               </div>
             </div>
             <div class="todo-item-contents">
