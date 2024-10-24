@@ -154,6 +154,11 @@
     /* display: block; */
     height: 100%;
   }
+  #todo-container,
+  #in-progress-container,
+  #done-container {
+    width: 100%;
+  }
 
   @media (min-width: 1024px) {
     .todo-board-contents {
@@ -170,6 +175,11 @@
       padding: 0 0 50px 0;
       overflow: hidden;
       /* transition: height .3s ease; */
+    }
+    #todo-container,
+    #in-progress-container,
+    #done-container {
+      width: 30%;
     }
   }
 </style>

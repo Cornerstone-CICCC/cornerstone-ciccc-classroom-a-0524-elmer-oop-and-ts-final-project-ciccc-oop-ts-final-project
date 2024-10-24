@@ -6,7 +6,7 @@ export interface ITodoItem {
 }
 
 export default class Todo {
-  static idCounter = 1;
+  static idCounter = 4;
   static filterLetter = "";
     todos: Array<ITodoItem>;
     addBtn: HTMLButtonElement | null = null;
@@ -70,7 +70,7 @@ export default class Todo {
       // Fetch one object where todo id = id
       const todoToEdit = this.todos.find((todo) => todo.id === id);
       if (todoToEdit) {
-        const newDescription = prompt("Edit To-Do: ", todoToEdit.description);
+        const newDescription = prompt("Edit ToDo: ", todoToEdit.description);
         if (newDescription) {
           todoToEdit.description = newDescription;
           this.render();
@@ -87,6 +87,44 @@ export default class Todo {
     if (this.searchbar) {
       Todo.filterLetter = this.searchbar.value.toLowerCase();
       this.render();
+    }
+  }
+
+  allowDrop(event: DragEvent) {
+    event.preventDefault();
+  }
+
+  drag(event: DragEvent) {
+    event.dataTransfer?.setData("text", (event.target as HTMLElement).id);
+  }
+
+  drop(event: DragEvent) {
+    event.preventDefault();
+    const data = event.dataTransfer?.getData("text");
+    const draggedElement = document.getElementById(data!);
+
+    let target = event.target as HTMLElement;
+
+    while (target && target.tagName !== "UL") {
+      target = target.parentElement as HTMLElement;
+    }
+
+    if (target && target.classList.contains("todo-list") && draggedElement) {
+      const todoId = parseInt(draggedElement.id.slice(-1))
+      const todo = this.todos.find((todo) => todo.id === todoId)
+
+      if (todo) {
+        // Update status of todo based on the target list
+        if (target.id.includes("todo")) {
+          todo.status = "todo";
+        } else if (target.id.includes("in-progress")) {
+          todo.status = "inProgress";
+        } else if (target.id.includes("done")) {
+          todo.status = "done";
+        }
+
+        target.appendChild(draggedElement);
+      }
     }
   }
 
@@ -107,7 +145,7 @@ export default class Todo {
 
     if (todoContainer) {
       todoContainer.innerHTML = ""; // Clear the container
-      this.renderStatusSection(todoContainer, todos, "To-Do");
+      this.renderStatusSection(todoContainer, todos, "ToDo");
     }
     if (inProgressContainer) {
       inProgressContainer.innerHTML = ""; // Clear the container
@@ -125,7 +163,7 @@ export default class Todo {
     sectionInner.classList.add('todo-upcoming')
     sectionInner.innerHTML = `
       <div class="section-heading">
-        <h3 class="section-title">To do</h3>
+        <h3 class="section-title">${title}</h3>
         <div class="section-icons">
           <span class="count">3 tasks</span>
           <img
@@ -138,15 +176,15 @@ export default class Todo {
       </div>
       <ul
         class="todo-list todo-list-upcoming"
-        id="div1"
-        ondrop="drop(event)"
-        ondragover="allowDrop(event)"
+        id="${title.toLowerCase().replace(' ', '-')}"
       >
       </ul>
       <div class="add-area">
         <img src="./images/plus.svg" alt="add-area" width="100px" />
       </div>
-    `
+    `;
+    sectionInner.querySelector('.todo-list')?.addEventListener("drop", (event) => this.drop(event as DragEvent))
+    sectionInner.querySelector('.todo-list')?.addEventListener("dragover", (event) => this.allowDrop(event as DragEvent))
 
     container.appendChild(sectionInner);
 
@@ -228,8 +266,7 @@ export default class Todo {
           <li
             class="todo-item"
             draggable="true"
-            ondragstart="drag(event)"
-            id="drag1"
+            id="todo-item-id${todo.id}"
           >
             <div class="todo-item-heading">
               <h4 class="todo-item-title">${todo.title}</h4>
@@ -248,6 +285,10 @@ export default class Todo {
         );
         li.querySelector(".btn-delete")?.addEventListener("click", () =>
           this.deleteTodo(todo.id)
+        );
+        // Add dragstart event listener for todo item
+        li.querySelector(".todo-item")?.addEventListener("dragstart", (event) =>
+          this.drag(event as DragEvent)
         );
 
         ul.appendChild(li);
