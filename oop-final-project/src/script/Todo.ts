@@ -6,7 +6,7 @@ export interface ITodoItem {
 }
 
 export default class Todo {
-  static idCounter = 1;
+  static idCounter = 4;
   static filterLetter = "";
   todos: Array<ITodoItem>;
   addBtn: HTMLButtonElement | null = null;
@@ -70,6 +70,7 @@ export default class Todo {
 
       if (this.titleInput) this.titleInput.value = "";
       if (this.descriptionInput) this.descriptionInput.value = "";
+      console.log(this.todos);
       this.render();
     }
   }
@@ -103,13 +104,21 @@ export default class Todo {
       const createModalElement = document.createElement("div");
       createModalElement.classList.add("modal_background");
       createModalElement.innerHTML = `
+      
         <div class="createModal-description">
-            <div class="create_modal">
-                <input type="text" name="title" id="title-input" />
-                <input type="text" name="description" id="description-input" />
-                <button id="todo-add-btn" class="${title}">Add To Do</button>
+          <div class="create-modal">
+            <button class="close-btn">&times;</button>
+
+            <div class="modal-input">
+              <label for="title">Title</label></br>
+              <input type="text" name="title" id="title-input" /></br>
+              <label for="description">Description</label></br>
+              <textarea type="text" name="description" id="description-input" rows="5" cols="40" /></textarea></br>
+              <button id="todo-add-btn" class="${title}">Add</button>
             </div>
+          </div>
         </div>
+      
       `;
       const status = createModalElement
         .querySelector("#todo-add-btn")
