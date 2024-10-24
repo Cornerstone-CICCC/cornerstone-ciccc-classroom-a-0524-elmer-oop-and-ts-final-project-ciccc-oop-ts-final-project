@@ -19,8 +19,157 @@
 <input type="text" name="description" id="description-input" />
 <button id="todo-add-btn">Add To Do</button>
 
-<div id="todo-container"></div>
-<div id="in-progress-container"></div>
-<div id="done-container"></div>
+<div class="todo-board-contents">
+  <div id="todo-container"></div>
+  <div id="in-progress-container"></div>
+  <div id="done-container"></div>
+</div>
 
 <script src="../script/Todo.ts"></script>
+
+<style global>
+  body {
+    background-color: #d9e8f8;
+  }
+
+  .section-title {
+    margin: 0;
+  }
+  .todo-board-contents {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+  }
+  .todo-status {
+    width: 80%;
+    background-color: #5e94ff;
+    padding: 20px;
+    border-radius: 10px;
+  }
+  .todo-upcoming {
+    background-color: #5e94ff;
+  }
+  .todo-inProgress {
+    background-color: #5e94ff;
+  }
+  .todo-upcoming {
+    background-color: #5e94ff;
+  }
+  .section-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+  }
+  .section-title {
+    font-size: 1.5rem;
+  }
+  .section-icons {
+    display: flex;
+  }
+  .count {
+    font-size: 1rem;
+  }
+  .plus-btn {
+    width: 20px;
+    height: 20px;
+  }
+  .todo-list {
+    width: 100%;
+    /* height: 0; */
+    padding: 50px 0 0 0;
+    overflow: hidden;
+  }
+  /* .todo-list:last-child{
+  margin-bottom: 100px;
+} */
+  .todo-item {
+    background-color: #9abcff;
+    list-style: none;
+    margin-bottom: 10px;
+    padding: 20px;
+    border-radius: 10px;
+    cursor: grab;
+  }
+  .todo-item:active {
+    cursor: grabbing;
+  }
+  .todo-item-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+  }
+  .todo-item-title {
+    font-size: 1rem;
+    margin: 0;
+  }
+  .detail-btn {
+    width: 20px;
+    height: 20px;
+  }
+  .todo-item-contents {
+    font-size: 0.5rem;
+  }
+  /* ----- detail-btn ----- */
+
+  .detail-btn-wrapper {
+    position: relative;
+  }
+  .detail-list {
+    position: absolute;
+    top: 25px;
+    left: -40px;
+    display: none;
+    flex-direction: column;
+  }
+  .edit-delete-btn {
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    width: 95px;
+  }
+
+  .open-toggle {
+    display: flex;
+  }
+
+  .add-area {
+    justify-content: center;
+    display: none;
+    opacity: 0.5;
+  }
+  .grabbed {
+    display: flex;
+  }
+  .dragging .add-area {
+    display: flex;
+    /* その他のスタイル */
+  }
+  .open-todo-list-upcoming,
+  .open-todo-list-inProgress,
+  .open-todo-list-done {
+    /* display: block; */
+    height: 100%;
+  }
+
+  @media (min-width: 1024px) {
+    .todo-board-contents {
+      flex-direction: row;
+      align-items: start;
+      gap: 15px;
+    }
+    .todo-status {
+      /* width: 30%; */
+    }
+    .todo-list {
+      /* display: none; */
+      height: auto;
+      padding: 0 0 50px 0;
+      overflow: hidden;
+      /* transition: height .3s ease; */
+    }
+  }
+</style>
