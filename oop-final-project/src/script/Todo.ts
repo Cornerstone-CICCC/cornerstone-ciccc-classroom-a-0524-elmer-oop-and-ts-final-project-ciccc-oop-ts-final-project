@@ -99,12 +99,50 @@ export default class Todo {
     }
   }
 
+  allowDrop(event: DragEvent) {
+    event.preventDefault();
+  }
+
+  drag(event: DragEvent) {
+    event.dataTransfer?.setData("text", (event.target as HTMLElement).id);
+  }
+
+  drop(event: DragEvent) {
+    event.preventDefault();
+    const data = event.dataTransfer?.getData("text");
+    const draggedElement = document.getElementById(data!);
+
+    let target = event.target as HTMLElement;
+
+    while (target && target.tagName !== "UL") {
+      target = target.parentElement as HTMLElement;
+    }
+
+    if (target && target.classList.contains("todo-list") && draggedElement) {
+      const todoId = parseInt(draggedElement.id.slice(-1))
+      const todo = this.todos.find((todo) => todo.id === todoId)
+
+      if (todo) {
+        // Update status of todo based on the target list
+        if (target.id.includes("todo")) {
+          todo.status = "todo";
+        } else if (target.id.includes("in-progress")) {
+          todo.status = "inProgress";
+        } else if (target.id.includes("done")) {
+          todo.status = "done";
+        }
+
+        target.appendChild(draggedElement);
+      }
+    }
+  }
+
   openCreateModal(title: string) {
     if (this.createModalContainer) {
       const createModalElement = document.createElement("div");
       createModalElement.classList.add("modal_background");
       createModalElement.innerHTML = `
-      
+
         <div class="createModal-description">
           <div class="create-modal">
             <button class="close-btn">&times;</button>
@@ -118,7 +156,7 @@ export default class Todo {
             </div>
           </div>
         </div>
-      
+
       `;
       const status = createModalElement
         .querySelector("#todo-add-btn")
@@ -161,7 +199,7 @@ export default class Todo {
 
     if (todoContainer) {
       todoContainer.innerHTML = ""; // Clear the container
-      this.renderStatusSection(todoContainer, todos, "To-Do");
+      this.renderStatusSection(todoContainer, todos, "ToDo");
     }
     if (inProgressContainer) {
       inProgressContainer.innerHTML = ""; // Clear the container
@@ -173,46 +211,151 @@ export default class Todo {
     }
   }
 
-  renderStatusSection(
-    container: HTMLElement,
-    items: Array<ITodoItem>,
-    title: string
-  ) {
-    const sectionTitle = document.createElement("h3");
-    sectionTitle.innerHTML = `
-    <div class="status_header">
-      <h3>${title}</h3>
-      <button class="modal_btn">+</button>
-    </div>
+  renderStatusSection(container: HTMLElement, items: Array<ITodoItem>, title: string) {
+    const sectionInner = document.createElement('section')
+    sectionInner.classList.add('todo-status')
+    sectionInner.classList.add('todo-upcoming')
+    sectionInner.innerHTML = `
+      <div class="section-heading">
+        <h3 class="section-title">${title}</h3>
+        <button class="modal_btn">+</button>
+      </div>
+      <ul
+        class="todo-list todo-list-upcoming"
+        id="${title.toLowerCase().replace(' ', '-')}"
+      >
+      </ul>
+      <div class="add-area">
+        <img src="./images/plus.svg" alt="add-area" width="100px" />
+      </div>
     `;
-    sectionTitle
+    sectionInner.querySelector('.todo-list')?.addEventListener("drop", (event) => this.drop(event as DragEvent))
+        sectionInner.querySelector('.todo-list')?.addEventListener("dragover", (event) => this.allowDrop(event as DragEvent))
+        sectionInner
       .querySelector(".modal_btn")
       ?.addEventListener("click", () => this.openCreateModal(title));
-    container.appendChild(sectionTitle);
 
-    items.forEach((todo) => {
-      const li = document.createElement("li");
-      li.innerHTML = `
-        <h3>${todo.title}</h3>
-        <span>${todo.description}</span>
-        <div class="btns">
-          <button class="btn-edit">Edit</button>
-          <button class="btn-delete">Delete</button>
-        </div>
-      `;
+    container.appendChild(sectionInner);
 
-      // Add event listeners for edit and delete buttons
-      li
-        .querySelector(".btn-edit")
-        ?.addEventListener("click", () => this.editTodo(todo.id));
-      li
-        .querySelector(".btn-delete")
-        ?.addEventListener("click", () => this.deleteTodo(todo.id));
+    const ul = sectionInner.querySelector("ul")
 
-      container.appendChild(li);
-    });
+    if (ul) {
+      items.forEach((todo) => {
+        const li = document.createElement("li");
+        // li.innerHTML = `
+        //   <h3>${todo.title}</h3>
+        //   <span>${todo.description}</span>
+        //   <div class="btns">
+        //     <button class="btn-edit">Edit</button>
+        //     <button class="btn-delete">Delete</button>
+        //   </div>
+        // `
+        // li.innerHTML = `
+        //   <li
+        //     class="todo-item"
+        //     draggable="true"
+        //     ondragstart="drag(event)"
+        //     id="drag1"
+        //   >
+        //     <div class="todo-item-heading">
+        //       <h4 class="todo-item-title">${todo.title}</h4>
+        //       <div class="detail-btn-wrapper">
+        //         <img
+        //           src="https://dummyimage.com/600x400/471de0/fff"
+        //           alt="detail-btn"
+        //           class="detail-btn"
+        //           width="50px"
+        //         />
+        //         <ul class="detail-list">
+        //           <button class="edit-btn">
+        //             <img
+        //               src="./images/edit.svg"
+        //               alt="edit"
+        //               class="detail-btn-icon"
+        //               width="20px"
+        //             />
+        //             <span class="detail-btn-context">Edit</span>
+        //           </button>
+        //           <button class="edit-delete-btn">
+        //             <img
+        //               src="./images/edit.svg"
+        //               alt="edit"
+        //               class="detail-btn-icon"
+        //               width="20px"
+        //             />
+        //             <span class="detail-btn-context">Delete</span>
+        //           </button>
+        //           <button class="edit-delete-btn">
+        //             <img
+        //               src="./images/edit.svg"
+        //               alt="edit"
+        //               class="detail-btn-icon"
+        //               width="20px"
+        //             />
+        //             <span class="detail-btn-context">In Progress</span>
+        //           </button>
+        //           <button class="edit-btn">
+        //             <img
+        //               src="./images/edit.svg"
+        //               alt="edit"
+        //               class="detail-btn-icon"
+        //               width="20px"
+        //             />
+        //             <span class="detail-btn-context">Done</span>
+        //           </button>
+        //         </ul>
+        //       </div>
+        //     </div>
+        //     <div class="todo-item-contents">
+        //       ${todo.description}
+        //     </div>
+        //   </li>
+        // `;
+        li.innerHTML = `
+          <li
+            class="todo-item"
+            draggable="true"
+            id="todo-item-id${todo.id}"
+          >
+            <div class="todo-item-heading">
+              <h4 class="todo-item-title">${todo.title}</h4>
+              <div class="todo-btn-wrapper">
+                <img
+                  src="/images/edit.svg"
+                  alt="edit button"
+                  class="btn-edit"
+                />
+                <img
+                  src="/images/delete.svg"
+                  alt="delete button"
+                  class="btn-delete"
+                />
+              </div>
+            </div>
+            <div class="todo-item-contents">
+              ${todo.description}
+            </div>
+          </li>
+        `;
+
+        // Add event listeners for edit and delete buttons
+        li.querySelector(".btn-edit")?.addEventListener("click", () =>
+          this.editTodo(todo.id)
+        );
+        li.querySelector(".btn-delete")?.addEventListener("click", () =>
+          this.deleteTodo(todo.id)
+        );
+        // Add dragstart event listener for todo item
+        li.querySelector(".todo-item")?.addEventListener("dragstart", (event) =>
+          this.drag(event as DragEvent)
+        );
+
+        ul.appendChild(li);
+      });
+    }
   }
 }
+
 
 document.addEventListener("DOMContentLoaded", () => {
   const app = new Todo();

@@ -13,107 +13,265 @@
 </TodoStatus> --><!-- <TodoStatus title="In Progress">
   <TodoItem title="Cooking" body="I gonna cook curry" />
 </TodoStatus> -->
-
-
-
 <h1>Task List</h1>
 
 <div id="createModal-container"></div>
 
-<div id="todo-container"></div>
-<div id="in-progress-container"></div>
-<div id="done-container"></div>
+<div class="todo-board-contents">
+  <div id="todo-container"></div>
+  <div id="in-progress-container"></div>
+  <div id="done-container"></div>
+</div>
 
 <script src="../script/Todo.ts"></script>
 
-<style>
+<style global>
+  * {
+    box-sizing: border-box;
+  }
+  body {
+    background-color: #d9e8f8;
+  }
+
+  .section-title {
+    margin: 0;
+  }
+  .todo-board-contents {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+  }
+  .todo-status {
+    width: 100%;
+    background-color: #5e94ff;
+    padding: 20px;
+    border-radius: 10px;
+  }
+  .todo-upcoming {
+    background-color: #5e94ff;
+  }
+  .todo-inProgress {
+    background-color: #5e94ff;
+  }
+  .todo-upcoming {
+    background-color: #5e94ff;
+  }
+  .section-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+  }
+  .section-title {
+    font-size: 1.5rem;
+  }
+  .section-icons {
+    display: flex;
+  }
+  .count {
+    font-size: 1rem;
+  }
+  .plus-btn {
+    width: 20px;
+    height: 20px;
+  }
+  .todo-list {
+    width: 100%;
+    /* height: 0; */
+    padding: 50px 0 0 0;
+    overflow: hidden;
+  }
+  /* .todo-list:last-child{
+  margin-bottom: 100px;
+} */
+  .todo-item {
+    background-color: #9abcff;
+    list-style: none;
+    margin-bottom: 10px;
+    padding: 20px;
+    border-radius: 10px;
+    cursor: grab;
+  }
+  .todo-item:active {
+    cursor: grabbing;
+  }
+  .todo-item-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+  }
+  .todo-item-title {
+    font-size: 1rem;
+    margin: 0;
+  }
+  .detail-btn {
+    width: 20px;
+    height: 20px;
+  }
+  .todo-item-contents {
+    font-size: 0.5rem;
+  }
+  /* ----- detail-btn ----- */
+
+  .detail-btn-wrapper {
+    position: relative;
+  }
+  .detail-list {
+    position: absolute;
+    top: 25px;
+    left: -40px;
+    display: none;
+    flex-direction: column;
+  }
+  .edit-delete-btn {
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    width: 95px;
+  }
+
+  .open-toggle {
+    display: flex;
+  }
+
+  .add-area {
+    justify-content: center;
+    display: none;
+    opacity: 0.5;
+  }
+  .grabbed {
+    display: flex;
+  }
+  .dragging .add-area {
+    display: flex;
+    /* その他のスタイル */
+  }
+  .open-todo-list-upcoming,
+  .open-todo-list-inProgress,
+  .open-todo-list-done {
+    /* display: block; */
+    height: 100%;
+  }
+  #todo-container,
+  #in-progress-container,
+  #done-container {
+    width: 100%;
+  }
+  .todo-btn-wrapper {
+    display: flex;
+  }
+
+  @media (min-width: 1024px) {
+    .todo-board-contents {
+      flex-direction: row;
+      align-items: start;
+      gap: 8px;
+    }
+    .todo-status {
+      /* width: 30%; */
+    }
+    .todo-list {
+      /* display: none; */
+      height: auto;
+      padding: 0 0 50px 0;
+      overflow: hidden;
+      /* transition: height .3s ease; */
+    }
+    #todo-container,
+    #in-progress-container,
+    #done-container {
+      width: 32%;
+    }
+  }
+
   #createModal-container {
-      position: fixed;
-      top: 0;
-      left: 0;
-      
-      .modal_background {
-        position: relative;
-        width: 100vw;
-        height: 100vh;
-        background-color: #6E6E6E;
+    position: fixed;
+    top: 0;
+    left: 0;
 
-          .createModal-description {
+    .modal_background {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+      background-color: #6e6e6e;
 
-            .create-modal {
-              position: relative;
-              width: 80vw;
-                /* height: 80vh; */
-                height: auto;
-                top: calc(50vh - 40vh);
-                left: calc(50vw - 40vw);
-                background-color: #9ABCFF;
-                border-radius: 10px;
+      .createModal-description {
+        .create-modal {
+          position: relative;
+          width: 80vw;
+          /* height: 80vh; */
+          height: auto;
+          top: calc(50vh - 40vh);
+          left: calc(50vw - 40vw);
+          background-color: #9abcff;
+          border-radius: 10px;
 
-              .close-btn {
-              position: absolute;
-              top: -10px;
-              right: -10px;
-              border: soild 0.5px #000;
-              width: 30px;
-              height: 30px;
-              background-color: #9ABCFF;
-              border-radius: 50%;
+          .close-btn {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            border: soild 0.5px #000;
+            width: 30px;
+            height: 30px;
+            background-color: #9abcff;
+            border-radius: 50%;
+          }
+
+          .modal-input {
+            padding: 5rem;
+
+            label {
+              font-size: 1.5rem;
+              font-family: "Irish Grover", system-ui;
             }
 
-              .modal-input {
-                padding: 5rem;
+            input {
+              width: 100%;
+              height: 1.5rem;
+              margin: 1rem 0 2rem;
+              padding: 0 0.5rem;
+              border: none;
+            }
 
-                label {
-                  font-size: 1.5rem;
-                  font-family: "Irish Grover", system-ui;
-                }
+            textarea {
+              width: 100%;
+              border: none;
+              margin: 1rem 0 2rem;
+              padding: 0.5rem;
+            }
 
-                input {
-                  width: 100%;
-                  height: 1.5rem;
-                  margin: 1rem 0 2rem;
-                  padding: 0 0.5rem;
-                  border: none;
-                }
+            #title-input {
+              height: 2.5rem;
+              border-radius: 5px;
+              font-size: 2rem;
+            }
 
-                textarea {
-                  width: 100%;
-                  border: none;
-                  margin: 1rem 0 2rem;
-                  padding: 0.5rem;
-                }
+            #description-input {
+              /* height: 8rem; */
+              border-radius: 5px;
+              font-size: 1.5rem;
+            }
 
-                #title-input {
-                  height: 2.5rem;
-                  border-radius: 5px;
-                  font-size: 2rem;
-                }
-
-                #description-input {
-                  /* height: 8rem; */
-                  border-radius: 5px;
-                  font-size: 1.5rem;
-                }
-
-                #todo-add-btn {
-                  position: absolute;
-                  padding: 0.5rem 1rem;
-                  border: none;
-                  border-radius: 5px;
-                  background-color: #5E94FF;
-                  color: #fff;
-                  font-size: 20px;
-                  right: 4rem;
-                }
-              }
+            #todo-add-btn {
+              position: absolute;
+              padding: 0.5rem 1rem;
+              border: none;
+              border-radius: 5px;
+              background-color: #5e94ff;
+              color: #fff;
+              font-size: 20px;
+              right: 4rem;
+            }
           }
         }
       }
-      #todo-add-btn {
-        /* background-color: red; */
-      }
+    }
+    #todo-add-btn {
+      /* background-color: red; */
+    }
   }
-
-
 </style>
