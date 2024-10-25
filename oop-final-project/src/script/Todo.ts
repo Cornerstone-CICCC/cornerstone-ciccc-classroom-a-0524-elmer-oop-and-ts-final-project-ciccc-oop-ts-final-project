@@ -181,7 +181,7 @@ export default class Todo {
       createModalElement
         .querySelector(".modal_background")
         ?.addEventListener("click", (e) => {
-          if (e.target.className === "modal_background") this.closeModal();
+          if ((e.target as HTMLElement).className === "modal_background") this.closeModal();
           // console.log(e.target.className);
 
           // if (e.target.closest())
