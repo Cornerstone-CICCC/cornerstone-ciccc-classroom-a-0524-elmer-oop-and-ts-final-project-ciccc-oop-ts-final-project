@@ -258,17 +258,16 @@ class Task {
               (checkbox) => (checkbox as HTMLInputElement).value
             )
             console.log(newAssignees)
-            
-            this.updateTask(eventId, {
-              id: eventId,
-              title: valueTitle,
-              description: valueDescription,
-              status: item.status,
-              assignees: newAssignees
 
-            })
-
-            if(!valueDescription && valueTitle){
+            if (valueDescription && valueTitle) {
+              this.updateTask(eventId, {
+                id: eventId,
+                title: valueTitle,
+                description: valueDescription,
+                status: item.status,
+                assignees: newAssignees,
+              });
+            } else if (!valueDescription && valueTitle) {
               this.updateTask(eventId, {
                 id: eventId,
                 title: valueTitle,
