@@ -134,6 +134,7 @@ export default class Todo {
 
         target.appendChild(draggedElement);
       }
+      this.render()
     }
   }
 
@@ -244,10 +245,16 @@ export default class Todo {
     const sectionInner = document.createElement("section");
     sectionInner.classList.add("todo-status");
     sectionInner.classList.add("todo-upcoming");
+    const itemLengthText = items.length === 0 || items.length === 1 ? `${items.length} Task` : `${items.length} Tasks`
     sectionInner.innerHTML = `
       <div class="section-heading">
         <h3 class="section-title">${title}</h3>
-        <button class="modal_btn">+</button>
+        <div class="section-heading-right">
+          <span>
+            ${itemLengthText}
+          </span>
+          <button class="modal_btn">+</button>
+        </div>
       </div>
       <ul
         class="todo-list todo-list-upcoming"
