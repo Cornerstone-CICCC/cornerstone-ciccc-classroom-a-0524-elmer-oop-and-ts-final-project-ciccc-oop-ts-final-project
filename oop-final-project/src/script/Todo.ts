@@ -3,6 +3,7 @@ export interface ITodoItem {
   title: string;
   description: string;
   status: string; // "todo", "inProgress", "done"
+  completed: boolean;
 }
 
 export default class Todo {
@@ -25,6 +26,7 @@ export default class Todo {
         description:
           "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eius distinctio, ducimus sed quisquam quaerat, numquam reprehenderit nulla dolores eveniet qui tenetur laborum, ipsum blanditiis debitis accusamus? Quasi perspiciatis et repellat?",
         status: "todo",
+        completed: false,
       },
       {
         id: 2,
@@ -32,6 +34,7 @@ export default class Todo {
         description:
           "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eius distinctio, ducimus sed quisquam quaerat, numquam reprehenderit nulla dolores eveniet qui tenetur laborum, ipsum blanditiis debitis accusamus? Quasi perspiciatis et repellat?",
         status: "inProgress",
+        completed: false,
       },
       {
         id: 3,
@@ -39,6 +42,7 @@ export default class Todo {
         description:
           "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eius distinctio, ducimus sed quisquam quaerat, numquam reprehenderit nulla dolores eveniet qui tenetur laborum, ipsum blanditiis debitis accusamus? Quasi perspiciatis et repellat?",
         status: "done",
+        completed: false,
       },
     ];
 
@@ -66,6 +70,7 @@ export default class Todo {
         title,
         description,
         status,
+        completed: false
       });
 
       if (this.titleInput) this.titleInput.value = "";
@@ -84,6 +89,18 @@ export default class Todo {
         todoToEdit.description = newDescription;
         this.render();
       }
+    }
+  }
+
+  editTodoCompleted(id: number) {
+    // Fetch one object where todo id = id
+    const todoToEdit = this.todos.find((todo) => todo.id === id);
+    if (todoToEdit) {
+      todoToEdit.completed = !todoToEdit.completed
+      if (todoToEdit.completed) {
+        todoToEdit.status = 'done'
+      }
+      this.render();
     }
   }
 
@@ -360,7 +377,10 @@ export default class Todo {
             id="todo-item-id${todo.id}"
           >
             <div class="todo-item-heading">
-              <h4 class="todo-item-title">${todo.title}</h4>
+              <div class="todo-title-wrapper">
+                <input type="checkbox" class="input-completed" ${todo.completed ? 'checked' : ''}>
+                <h4 class="todo-item-title">${todo.title}</h4>
+              </div>
               <div class="todo-btn-wrapper">
                 <img
                   src="/images/edit.svg"
@@ -380,13 +400,16 @@ export default class Todo {
           </li>
         `;
 
-        // Add event listeners for edit and delete buttons
+        // Add event listeners for edit and delete buttons and checkbox
         li
           .querySelector(".btn-edit")
           ?.addEventListener("click", () => this.editTodo(todo.id));
         li
           .querySelector(".btn-delete")
           ?.addEventListener("click", () => this.deleteTodo(todo.id));
+        li
+          .querySelector(".input-completed")
+          ?.addEventListener("click", () => this.editTodoCompleted(todo.id));
         // Add dragstart event listener for todo item
         li
           .querySelector(".todo-item")
