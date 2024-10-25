@@ -53,12 +53,12 @@ class Task {
       assignees: data.assignees
     }
 
+    this.tasks = this.tasks.map((item) => {
+      return item.id === updatedTask.id ? updatedTask : item;
+    });
+
     if (this.isFiltered) {
       this.filteredTask = this.filteredTask.map((item) => {
-        return item.id === updatedTask.id ? updatedTask : item;
-      });
-
-      this.tasks = this.tasks.map((item) => {
         return item.id === updatedTask.id ? updatedTask : item;
       });
 
