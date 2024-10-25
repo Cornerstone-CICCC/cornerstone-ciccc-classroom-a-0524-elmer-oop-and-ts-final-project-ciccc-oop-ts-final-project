@@ -47,11 +47,15 @@
         <div class="right">
           <label for="">Assignees</label>
           <div class="right-container">
-            <input type="checkbox" name="assignee" value="Eva"  id="taskTitle">Eva
-  
-            <input type="checkbox" name="assignee" value="Yuta">Yuta
-
-            <input type="checkbox" name="assignee" value="Risa">Risa
+            <li>
+              <input type="checkbox" name="assignee" value="Eva"  id="taskTitle">Eva
+            </li>
+            <li>
+              <input type="checkbox" name="assignee" value="Yuta">Yuta
+            </li>
+            <li>
+              <input type="checkbox" name="assignee" value="Risa">Risa
+            </li>
           </div>
         </div>
       </div>  
@@ -111,6 +115,12 @@
 
   .left .right{
     width:50%;
+  }
+
+  .right li{
+    list-style: none;
+    display: flex;
+    padding: 10px;
   }
 
   .form-group label {
