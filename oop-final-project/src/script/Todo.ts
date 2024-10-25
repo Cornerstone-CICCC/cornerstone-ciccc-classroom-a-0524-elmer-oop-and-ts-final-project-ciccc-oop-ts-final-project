@@ -119,8 +119,8 @@ export default class Todo {
     }
 
     if (target && target.classList.contains("todo-list") && draggedElement) {
-      const todoId = parseInt(draggedElement.id.slice(-1))
-      const todo = this.todos.find((todo) => todo.id === todoId)
+      const todoId = parseInt(draggedElement.id.slice(-1));
+      const todo = this.todos.find((todo) => todo.id === todoId);
 
       if (todo) {
         // Update status of todo based on the target list
@@ -140,29 +140,41 @@ export default class Todo {
   openCreateModal(title: string) {
     if (this.createModalContainer) {
       const createModalElement = document.createElement("div");
-      createModalElement.classList.add("modal_background");
+      createModalElement.classList.add("createModal_div");
       createModalElement.innerHTML = `
-
-        <div class="createModal-description">
-          <div class="create-modal">
+        <div class="modal_background">
+          <div class="createModal-description">
             <button class="close-btn">&times;</button>
 
-            <div class="modal-input">
-              <label for="title">Title</label></br>
-              <input type="text" name="title" id="title-input" /></br>
-              <label for="description">Description</label></br>
-              <textarea type="text" name="description" id="description-input" rows="5" cols="40" /></textarea></br>
+            <form class="modal-input">
+              <label for="title-input">Title</label></br>
+              <input type="text" name="title" id="title-input" required /></br>
+              <label for="description-input">Description</label></br>
+              <textarea type="text" name="description" id="description-input" rows="5" cols="40" required /></textarea></br>
               <button id="todo-add-btn" class="${title}">Add</button>
             </div>
           </div>
         </div>
-
       `;
+      createModalElement
+        .querySelector(".close-btn")
+        ?.addEventListener("click", () => this.closeModal());
+
+      createModalElement
+        .querySelector(".modal_background")
+        ?.addEventListener("click", (e) => {
+          if (e.target.className === "modal_background") this.closeModal();
+          // console.log(e.target.className);
+
+          // if (e.target.closest())
+          // e.stopPropagation();
+          // this.closeModl();
+        });
       const status = createModalElement
         .querySelector("#todo-add-btn")
         ?.getAttribute("class");
       let camelStatus = "";
-      if (status === "To-Do") {
+      if (status === "ToDo") {
         camelStatus = "todo";
       } else if (status === "In Progress") {
         camelStatus = "inProgress";
@@ -171,9 +183,22 @@ export default class Todo {
       }
       createModalElement
         .querySelector("#todo-add-btn")
-        ?.addEventListener("click", () => this.addTodo(camelStatus));
+        ?.addEventListener("click", () => {
+          this.titleInput = document.querySelector("#title-input");
+          this.descriptionInput = document.querySelector("#description-input");
+          const title = this.titleInput?.value;
+          const description = this.descriptionInput?.value;
+          if (title && description) {
+            this.addTodo(camelStatus);
+            this.closeModal();
+          }
+        });
       this.createModalContainer.appendChild(createModalElement);
     }
+  }
+
+  closeModal() {
+    if (this.createModalContainer) this.createModalContainer.innerHTML = "";
   }
 
   render() {
@@ -211,10 +236,14 @@ export default class Todo {
     }
   }
 
-  renderStatusSection(container: HTMLElement, items: Array<ITodoItem>, title: string) {
-    const sectionInner = document.createElement('section')
-    sectionInner.classList.add('todo-status')
-    sectionInner.classList.add('todo-upcoming')
+  renderStatusSection(
+    container: HTMLElement,
+    items: Array<ITodoItem>,
+    title: string
+  ) {
+    const sectionInner = document.createElement("section");
+    sectionInner.classList.add("todo-status");
+    sectionInner.classList.add("todo-upcoming");
     sectionInner.innerHTML = `
       <div class="section-heading">
         <h3 class="section-title">${title}</h3>
@@ -222,22 +251,28 @@ export default class Todo {
       </div>
       <ul
         class="todo-list todo-list-upcoming"
-        id="${title.toLowerCase().replace(' ', '-')}"
+        id="${title.toLowerCase().replace(" ", "-")}"
       >
       </ul>
       <div class="add-area">
         <img src="./images/plus.svg" alt="add-area" width="100px" />
       </div>
     `;
-    sectionInner.querySelector('.todo-list')?.addEventListener("drop", (event) => this.drop(event as DragEvent))
-        sectionInner.querySelector('.todo-list')?.addEventListener("dragover", (event) => this.allowDrop(event as DragEvent))
-        sectionInner
+    sectionInner
+      .querySelector(".todo-list")
+      ?.addEventListener("drop", (event) => this.drop(event as DragEvent));
+    sectionInner
+      .querySelector(".todo-list")
+      ?.addEventListener("dragover", (event) =>
+        this.allowDrop(event as DragEvent)
+      );
+    sectionInner
       .querySelector(".modal_btn")
       ?.addEventListener("click", () => this.openCreateModal(title));
 
     container.appendChild(sectionInner);
 
-    const ul = sectionInner.querySelector("ul")
+    const ul = sectionInner.querySelector("ul");
 
     if (ul) {
       items.forEach((todo) => {
@@ -339,23 +374,24 @@ export default class Todo {
         `;
 
         // Add event listeners for edit and delete buttons
-        li.querySelector(".btn-edit")?.addEventListener("click", () =>
-          this.editTodo(todo.id)
-        );
-        li.querySelector(".btn-delete")?.addEventListener("click", () =>
-          this.deleteTodo(todo.id)
-        );
+        li
+          .querySelector(".btn-edit")
+          ?.addEventListener("click", () => this.editTodo(todo.id));
+        li
+          .querySelector(".btn-delete")
+          ?.addEventListener("click", () => this.deleteTodo(todo.id));
         // Add dragstart event listener for todo item
-        li.querySelector(".todo-item")?.addEventListener("dragstart", (event) =>
-          this.drag(event as DragEvent)
-        );
+        li
+          .querySelector(".todo-item")
+          ?.addEventListener("dragstart", (event) =>
+            this.drag(event as DragEvent)
+          );
 
         ul.appendChild(li);
       });
     }
   }
 }
-
 
 document.addEventListener("DOMContentLoaded", () => {
   const app = new Todo();
