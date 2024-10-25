@@ -104,7 +104,7 @@
         if(targetInput?.trim()){
         taskList.tasks.forEach((item)=>{
             if(item.title.includes(targetInput)){
-                taskList.addFilteredTask(item)
+                taskList.addFilteredTask(item, targetInput)
             }
         })
 

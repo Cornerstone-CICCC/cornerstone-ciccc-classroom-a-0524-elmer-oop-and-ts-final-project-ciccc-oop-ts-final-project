@@ -8,13 +8,13 @@ type TaskList = {
   assignees: string[];
 };
 
-
 class Task {
   static taskId = 0;
   static id = 0;
   tasks: TaskList[];
   filteredTask: TaskList[];
   isFiltered = false;
+  targetInput = "";
 
   constructor() {
     this.tasks = [];
@@ -28,9 +28,14 @@ class Task {
     this.renderTasks();
   }
 
-  addFilteredTask(newTask: TaskList) {
+  addFilteredTask(newTask: TaskList, targetInput: string) {
     this.filteredTask = [...this.filteredTask, newTask];
     this.isFiltered = true;
+    this.targetInput = targetInput;
+  }
+
+  addFilterEditTask(newTask: TaskList) {
+    this.filteredTask = [...this.filteredTask, newTask];
   }
 
   // update method
@@ -48,11 +53,26 @@ class Task {
       assignees: data.assignees
     }
 
-    const filteredTasks = this.tasks.filter((item) => {
-      return item.id !== item.id
-    })
+    if (this.isFiltered) {
+      this.filteredTask = this.filteredTask.map((item) => {
+        return item.id === updatedTask.id ? updatedTask : item;
+      });
 
-    this.tasks = [...filteredTasks, updatedTask]
+      this.tasks = this.tasks.map((item) => {
+        return item.id === updatedTask.id ? updatedTask : item;
+      });
+
+      let newFilteredTask = this.filteredTask;
+      if (this.targetInput?.trim()) {
+        this.filteredTask = [];
+        newFilteredTask.forEach((item) => {
+          if (item.title.includes(this.targetInput)) {
+            taskList.addFilterEditTask(item);
+          }
+        });
+      }
+    }
+
     this.renderTasks();
   }
 
