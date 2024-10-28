@@ -64,32 +64,54 @@ const { title } = Astro.props;
     position: relative; 
   }
   .edit-title, .edit-description{
+    font-size: 16px;
     display: flex;
     justify-content: space-between;
     align-items: center;
   }
+
+  .everything h2{
+    font-size: 16px;
+  }
+
+  .info input{
+    /* height: 25px; */
+    padding: 8px;
+    width: 100%;
+    border: none;
+    background-color: #EDEDED;
+    border-radius: 10px;
+  }
+  .edit-input-description{
+    margin-bottom: 15px;
+  }
   .close-btn{
     position: absolute;
-    top: 0;
-    right: 0;
+    top: 5px;
+    right: 5px;
     width: 30px;
   }
 
   .pencil-btn-title, .pencil-btn-description{
-    width: 30px;
-    height: 30px;
+    width: 20px;
+    height: 20px;
   }
-
+  .assignees ul{
+    padding: 0;
+  }
+  .assignees p{
+    margin-left: 10px;
+  }
+  .info{
+    width: 150px;
+  }
   .edit-input-title, .edit-input-description{
     display: none;
   }
   .card-container {
-    flex: 1;
     background-color: #F5F5F5;
-    margin: 10px;
-    padding-left: 30px;
-    padding-right: 30px;
-    border-radius: 10px;
+    padding: 0 30px;
+    border-radius: 10px; 
     height: 100vh;
   }
 
@@ -104,11 +126,16 @@ const { title } = Astro.props;
     background-color: #ffffff;
     border-radius: 10px;
     padding: 10px 20px;
+    max-width: 200px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     margin: 10px 0;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
   }
-
+  @media (min-width: 1200px ){
+    .card{
+      max-width: 400px;
+    }
+  }
   .card:hover {
     transform: translateY(-5px);
     box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
@@ -121,13 +148,19 @@ const { title } = Astro.props;
   }
 
   .card-header img {
-    width: 15px;
-    height: 15px;
+    width: 20px;
+    height: 20px;
+  }
+  .card-header div{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 5px;
   }
 
   .card-title {
     font-size: 1.5rem;
-    margin-bottom: 10px;
+    margin: 15px 0;
     color: #333;
     font-weight: bold;
   }
@@ -189,12 +222,6 @@ const { title } = Astro.props;
 
     .card-desc {
       font-size: 0.9rem;
-    }
-  }
-
-  @media (max-width: 375px){
-    .todo-list-section{
-      overflow-x: auto;
     }
   }
 </style>
