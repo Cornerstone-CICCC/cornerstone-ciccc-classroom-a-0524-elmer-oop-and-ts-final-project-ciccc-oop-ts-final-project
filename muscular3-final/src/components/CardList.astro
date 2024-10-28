@@ -1,29 +1,31 @@
-
-<section class="todo-list-section">
-  <div class="card-container">
-    <div class="card-list-header">
-      <h2>Todo</h2>
-      <p class="AddTodo">+</p>
+<!--  -->
+<div class="slider-wrapper">
+  <section class="todo-list-section">
+    <div class="card-container">
+      <div class="card-list-header">
+        <h2>Todo</h2>
+        <p class="AddTodo">+</p>
+      </div>
+      <div id="list-todo"></div> 
+      <div>
     </div>
-    <div id="list-todo"></div> 
-    <div>
-  </div>
-  </div>
-  <div class="card-container">
-    <div class="card-list-header">
-      <h2>In progress</h2>
-        <p class="AddInProgress">+</p>
     </div>
-  <div id="list-inprogress"></div> 
-  </div>
-  <div class="card-container">
-    <div class="card-list-header">
-      <h2>Done</h2>
-        <p class="AddDone">+</p>
+    <div class="card-container">
+      <div class="card-list-header">
+        <h2>In progress</h2>
+          <p class="AddInProgress">+</p>
+      </div>
+    <div id="list-inprogress"></div> 
     </div>
-    <div id="list-done"></div>
-  </div>
-</section>
+    <div class="card-container">
+      <div class="card-list-header">
+        <h2>Done</h2>
+          <p class="AddDone">+</p>
+      </div>
+      <div id="list-done"></div>
+    </div>
+  </section>
+</div>  
 
 
 <!-- modal layout-->
@@ -64,26 +66,52 @@
 </div>
 
 <style>
-  .card-list-header p{
-    cursor: pointer;
+  .slider-wrapper{
+    position: relative;
+    max-width: 374px;
+    margin: 0 auto;
   }
   .todo-list-section{
     display: flex;
-    justify-content: center;
-    margin-left: 20px;
-    margin-right:20px;
-    min-height: 300px;
+    gap: 20px;
+    overflow: auto;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
   }
+  .card-container{
+    width: 350px;
+    margin: auto;
+  }
+  
   .card-list-header{
+    cursor:pointer;
     display: flex;
-    justify-content: space-between;
     align-items: center;
+    justify-content: space-between;
+    width: 200px;
   }
-
+  @media (min-width: 768px ){
+    .card-list-header{
+      max-width: 400px;
+      width: 100%;
+    }
+  }
   .todo-list-section p{
     font-size: 30px;
   }
 
+  @media (min-width: 768px ){
+    .slider-wrapper{
+      width: 100%;
+      max-width: 1400px;
+      margin: auto;
+      padding: 0;
+    }
+    .todo-list-section{
+      margin: auto;
+      justify-content: space-evenly;
+    }
+  }
   /* modal */
   .modal {
     display: none;
@@ -160,12 +188,12 @@
   }
 
   .submit-btn {
-    background-color: #4CAF50;
+    background-color: #4B4140;
     color: white;
   }
 
   .cancel-btn {
-    background-color: #f44336;
+    background-color: #BB271A;
     color: white;
   }
 </style>
