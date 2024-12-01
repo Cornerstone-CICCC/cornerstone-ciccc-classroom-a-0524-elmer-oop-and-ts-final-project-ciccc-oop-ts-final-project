@@ -1,0 +1,227 @@
+---
+interface Props {
+	title: string;
+}
+
+const { title } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="description" content="Astro description" />
+		<meta name="viewport" content="width=device-width" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<meta name="generator" content={Astro.generator} />
+		<title>{title}</title>
+	</head>
+	<body>
+		<slot />
+	</body>
+</html>
+<style is:global>
+  html {
+    font-family: system-ui, sans-serif;
+    background: #fafbfc;
+  }
+
+  .overlay{
+	position: fixed; 
+    top: 0; 
+    left: 0;
+    width: 100vw; 
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center; 
+    align-items: center; 
+    z-index: 999; 
+  }
+
+  .deleteConfirmation{
+	  background-color: #fff;
+    border-radius: 10px;
+    padding: 20px;
+    width: 400px; 
+    max-width: 90%;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  }
+
+  .everything{
+    display: flex;
+    justify-content: space-evenly;
+  }
+  .edit-modal{
+    background-color: #fff;
+    border-radius: 10px;
+    padding: 20px;
+    width: 400px; 
+    max-width: 90%;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    display: flex;
+    flex-direction: column;
+    position: relative; 
+  }
+  .edit-title, .edit-description{
+    font-size: 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .everything h2{
+    font-size: 16px;
+  }
+
+  .info input{
+    /* height: 25px; */
+    padding: 8px;
+    width: 100%;
+    border: none;
+    background-color: #EDEDED;
+    border-radius: 10px;
+  }
+  .edit-input-description{
+    margin-bottom: 15px;
+  }
+  .close-btn{
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    width: 30px;
+  }
+
+  .pencil-btn-title, .pencil-btn-description{
+    width: 20px;
+    height: 20px;
+  }
+  .assignees ul{
+    padding: 0;
+  }
+  .assignees p{
+    margin-left: 10px;
+  }
+  .info{
+    width: 150px;
+  }
+  .edit-input-title, .edit-input-description{
+    display: none;
+  }
+  .card-container {
+    background-color: #F5F5F5;
+    padding: 0 30px;
+    border-radius: 10px; 
+    height: 100vh;
+  }
+
+  #list-todo,
+  #list-inprogress,
+  #list-done {
+    height: 80%;
+    overflow-y: auto;
+  }
+
+  .card {
+    background-color: #ffffff;
+    border-radius: 10px;
+    padding: 10px 20px;
+    max-width: 200px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    margin: 10px 0;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  @media (min-width: 1200px ){
+    .card{
+      max-width: 400px;
+    }
+  }
+  .card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+  }
+
+  .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .card-header img {
+    width: 20px;
+    height: 20px;
+  }
+  .card-header div{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 5px;
+  }
+
+  .card-title {
+    font-size: 1.5rem;
+    margin: 15px 0;
+    color: #333;
+    font-weight: bold;
+  }
+
+  .card-desc {
+    font-size: 1rem;
+    color: #666;
+    line-height: 1.6;
+  }
+
+  .save-btn{
+    background-color: #4CAF50;
+    color: white;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  .assignees li{
+    list-style: none;
+    display: flex;
+  }
+
+  .assignees ul{
+    display: flex;
+    flex-direction: column;
+  }
+
+
+  /* delete modal style */
+    .btn-cancel,
+    .btn-delete{
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+
+  .btn-cancel {
+    background-color: #848784;
+    color: white;
+  }
+
+  .btn-delete{
+    background-color: #f44336;
+    color: white;
+  }
+
+
+  /* レスポンシブ調整 */
+  @media (max-width: 768px) {
+    .card {
+      padding: 15px;
+    }
+
+    .card-title {
+      font-size: 1.3rem;
+    }
+
+    .card-desc {
+      font-size: 0.9rem;
+    }
+  }
+</style>
